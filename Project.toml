@@ -1,0 +1,10 @@
+[deps]
+Chain = "8be319e6-bccf-4806-a6f7-6fae938471bc"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+Hyperscript = "47d2ed2b-36de-50cf-bf87-49c2cf4b8b91"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+MiniLoggers = "93f3dd0f-005d-4452-894a-a31841fa4078"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"

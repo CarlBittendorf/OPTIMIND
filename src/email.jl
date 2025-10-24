@@ -47,8 +47,8 @@ const CSS = """
 }
 """
 
-@tags head body tbody thead h1 td th tr span p a br img strong
-@tags_noescape style
+Hyperscript.@tags head body tbody thead h1 td th tr span p a br img strong
+Hyperscript.@tags_noescape style
 
 function make_head(title)
     head(

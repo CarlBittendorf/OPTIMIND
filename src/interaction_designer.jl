@@ -124,7 +124,12 @@ function download_interaction_designer_variable_values(
         cutofftime,
         hoursinpast
 )
-    df = DataFrame()
+    df = DataFrame(
+        :Participant => String[],
+        :DateTime => DateTime[],
+        :Variable => String[],
+        :Value => []
+    )
 
     names, variableuuids, types = [getproperty.(variables, x)
                                    for x in [:name, :uuid, :type]]

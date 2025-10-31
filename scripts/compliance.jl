@@ -52,9 +52,11 @@ function script()
             [:Finished, :Date] => ((finishes, dates) -> sum(finishes[dates .>= cutoff])) => :Finished
         )
 
-        transform([:Target, :Finished] => ByRow((targets, finishes) -> format_compliance(finishes / targets)) => :Compliance)
-        select(:Participant, :Days, :Target, :Finished, :Compliance, :Total)
+        transform([:Target, :Finished] => ByRow((targets, finishes) -> finishes / targets) => :Compliance)
         sort(:Compliance)
+
+        transform(:Compliance => ByRow(format_compliance); renamecols = false)
+        select(:Participant, :Days, :Target, :Finished, :Compliance, :Total)
     end
 
     if nrow(df) > 0

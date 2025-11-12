@@ -47,15 +47,15 @@ function script()
         groupby(:Participant)
         combine(
             [:Day, :Date] => ((days, dates) -> format_days(days[dates .>= cutoff])) => :Days,
-            [:Target, :Finished] => ((targets, finishes) -> format_compliance(sum(finishes) / sum(targets))) => :Total,
+            [:Target, :Finished] => ((targets, finishes) -> sum(finishes) / sum(targets)) => :Total,
             [:Target, :Date] => ((targets, dates) -> sum(targets[dates .>= cutoff])) => :Target,
             [:Finished, :Date] => ((finishes, dates) -> sum(finishes[dates .>= cutoff])) => :Finished
         )
 
         transform([:Target, :Finished] => ByRow((targets, finishes) -> finishes / targets) => :Compliance)
-        sort(:Compliance)
+        sort([:Compliance, :Total])
 
-        transform(:Compliance => ByRow(format_compliance); renamecols = false)
+        transform([:Compliance, :Total] => ByRow(format_compliance); renamecols = false)
         select(:Participant, :Days, :Target, :Finished, :Compliance, :Total)
     end
 

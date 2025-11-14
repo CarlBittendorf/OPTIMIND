@@ -4,6 +4,8 @@ chunk(N, size) = [((i - 1) * size + 1):min(i * size, N) for i in 1:ceil(Int, N /
 format_cutoff_time(x) = string(x) * "Z"
 
 function format_days(x)
+    isempty(x) && return ""
+
     min, max = extrema(x)
 
     if min == max
@@ -27,4 +29,4 @@ end
 
 parse_created_at(x) = DateTime(x[1:(end - 4)])
 
-enumerate_days(x) = Dates.value.(Date.(x) .- Date(minimum(x))) .+ 1
+enumerate_days(x) = Dates.value.(Date.(x) .- Date(minimum(x; init = Date(now())))) .+ 1

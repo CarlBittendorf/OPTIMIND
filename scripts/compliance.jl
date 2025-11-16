@@ -27,7 +27,7 @@ function script()
 
         # use only participants who are still active
         groupby(:Participant)
-        subset(:Date => (x -> maximum(x) == Date(now() - Day(1))))
+        subset(:Date => (x -> maximum(x; init = cutoff) == Date(now()) - Day(1)))
 
         # count the appearances of each variable
         groupby([:Participant, :Date])

@@ -28,7 +28,7 @@ function download_interaction_designer_token(username, password, clientsecret)
     @chain begin
         interaction_designer_api_request(
             "POST",
-            "https://manager-staging.therapydesigner.com/auth/realms/TherapyDesigner/protocol/openid-connect/token";
+            "https://id.movisens.com/auth/realms/TherapyDesigner/protocol/openid-connect/token";
             body = Dict(
                 "client_id" => "td-api",
                 "grant_type" => "password",
@@ -45,7 +45,7 @@ function download_interaction_designer_studyuuid(token)
     @chain begin
         interaction_designer_api_request(
             "GET",
-            "https://manager-staging.therapydesigner.com/api/export/studies";
+            "https://id.movisens.com/api/export/studies";
             headers = ["Authorization" => "Bearer " * token]
         )
         only
@@ -57,7 +57,7 @@ function download_interaction_designer_results(token, studyuuid)
     @chain begin
         interaction_designer_api_request(
             "POST",
-            "https://manager-staging.therapydesigner.com/api/export/studies/" * studyuuid *
+            "https://id.movisens.com/api/export/studies/" * studyuuid *
             "/results";
             headers = ["Authorization" => "Bearer " * token],
             query = ["exportFormat" => "CSV", "until" => string(now()) * "Z"]
@@ -69,7 +69,7 @@ end
 function download_interaction_designer_results_status(token, studyuuid, statusid)
     interaction_designer_api_request(
         "GET",
-        "https://manager-staging.therapydesigner.com/api/export/studies/" * studyuuid *
+        "https://id.movisens.com/api/export/studies/" * studyuuid *
         "/results/status/" * statusid;
         headers = ["Authorization" => "Bearer " * token]
     )
@@ -78,7 +78,7 @@ end
 function download_interaction_designer_results_data(token, studyuuid, resultid)
     interaction_designer_api_request(
         "GET",
-        "https://manager-staging.therapydesigner.com/api/export/studies/" * studyuuid *
+        "https://id.movisens.com/api/export/studies/" * studyuuid *
         "/results/" * resultid;
         headers = ["Authorization" => "Bearer " * token]
     )
@@ -87,7 +87,7 @@ end
 function download_interaction_designer_participants(token, studyuuid)
     interaction_designer_api_request(
         "GET",
-        "https://manager-staging.therapydesigner.com/api/export/studies/" * studyuuid *
+        "https://id.movisens.com/api/export/studies/" * studyuuid *
         "/participants";
         headers = ["Authorization" => "Bearer " * token]
     )
@@ -96,7 +96,7 @@ end
 function download_interaction_designer_participant_data(token, studyuuid, participantuuid)
     interaction_designer_api_request(
         "GET",
-        "https://manager-staging.therapydesigner.com/api/export/studies/" * studyuuid *
+        "https://id.movisens.com/api/export/studies/" * studyuuid *
         "/participants/" * participantuuid;
         headers = ["Authorization" => "Bearer " * token]
     )
@@ -105,7 +105,7 @@ end
 function download_interaction_designer_groups(token, studyuuid)
     interaction_designer_api_request(
         "GET",
-        "https://manager-staging.therapydesigner.com/api/export/studies/" * studyuuid *
+        "https://id.movisens.com/api/export/studies/" * studyuuid *
         "/groups";
         headers = ["Authorization" => "Bearer " * token]
     )
@@ -114,7 +114,7 @@ end
 function download_interaction_designer_group_data(token, studyuuid, groupuuid)
     interaction_designer_api_request(
         "GET",
-        "https://manager-staging.therapydesigner.com/api/export/studies/" * studyuuid *
+        "https://id.movisens.com/api/export/studies/" * studyuuid *
         "/groups/" * groupuuid;
         headers = ["Authorization" => "Bearer " * token]
     )
@@ -146,7 +146,7 @@ function download_interaction_designer_variable_values(
         for i in 0:(ceil(Int, hoursinpast / 168) - 1)
             result = interaction_designer_api_request(
                 "POST",
-                "https://manager-staging.therapydesigner.com/api/export/studies/" *
+                "https://id.movisens.com/api/export/studies/" *
                 studyuuid * "/variable-values";
                 body = JSON.json(
                     Dict(

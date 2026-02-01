@@ -55,7 +55,7 @@ function script()
         transform([:Target, :Finished] => ByRow((targets, finishes) -> finishes / targets) => :Compliance)
         sort([:Compliance, :Total])
 
-        transform([:Compliance, :Total] => ByRow(format_compliance); renamecols = false)
+        transform([:Compliance, :Total] .=> ByRow(format_compliance); renamecols = false)
         select(:Participant, :Days, :Target, :Finished, :Compliance, :Total)
     end
 

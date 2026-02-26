@@ -7,5 +7,6 @@ const COMPLIANCE_VARIABLES = [
 ]
 
 const JITAI_VARIABLES = [
-    Variable("EmergencyInteraction", "cd201972-b3bc-43dd-b0b1-d5fdb08ec7f4", Int)
+    Variable("EmergencyInteraction", "cd201972-b3bc-43dd-b0b1-d5fdb08ec7f4", Int),
+    Variable("Conversation", "7de1bcfe-7e7c-48bf-b08d-515bfc1860ef", Int)
 ]

@@ -19,6 +19,10 @@ function script()
             hoursinpast
         )
 
+        transform(:DateTime => ByRow(Date) => :Date)
+    end
+
+    df_emergency = @chain df begin
         subset(:Variable => ByRow(isequal("EmergencyInteraction")))
         transform(
             :DateTime => ByRow(Date) => :Date,
@@ -28,8 +32,20 @@ function script()
         select(:Participant, :Date, :Time, :Counter)
     end
 
-    if nrow(df) > 0
-        send_jitai_email(EMAIL_CREDENTIALS, EMAIL_FEEDBACK_RECEIVERS, df)
+    df_conversation = @chain df begin
+        subset(:Variable => ByRow(isequal("Conversation")))
+        transform(:Value => ByRow(x -> isequal(x, 1) ? "Yes" : "No") => :Conversation)
+        select(:Participant, :Date, :Conversation)
+    end
+
+    df_jitai = @chain begin
+        leftjoin(df_emergency, df_conversation; on = [:Participant, :Date])
+
+        select(:Participant, :Date, :Time, :Counter, :Conversation)
+    end
+
+    if nrow(df_jitai) > 0
+        send_jitai_email(EMAIL_CREDENTIALS, EMAIL_FEEDBACK_RECEIVERS, df_jitai)
     end
 end
 

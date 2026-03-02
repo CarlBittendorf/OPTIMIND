@@ -39,7 +39,7 @@ function script()
         transform(:Date => enumerate_days => :Day)
 
         transform(
-            :Day => ByRow(x -> x <= 3 ? 8 : 4) => :Target,
+            :Day => ByRow(x -> (x <= 3) ? 8 : (4 <= x <= 7) ? 0 : 4) => :Target,
             Cols(endswith("Triggered")) => ByRow(+) => :Triggered,
             Cols(endswith("Finished")) => ByRow(+) => :Finished
         )

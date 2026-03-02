@@ -20,7 +20,7 @@ function script()
             participantuuids,
             COMPLIANCE_VARIABLES;
             cutofftime = floor(now(), Day),
-            hoursinpast = 32 * 24
+            hoursinpast = 36 * 24
         )
 
         transform(:DateTime => ByRow(Date) => :Date)

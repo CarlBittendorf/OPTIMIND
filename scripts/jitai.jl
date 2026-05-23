@@ -42,6 +42,7 @@ function script()
         leftjoin(df_emergency, df_conversation; on = [:Participant, :Date])
 
         select(:Participant, :Date, :Time, :Counter, :Conversation)
+        unique
     end
 
     if nrow(df_jitai) > 0

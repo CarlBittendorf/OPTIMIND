@@ -8,7 +8,7 @@ This repository contains the code for real-time analyses that detect repeatedly 
 
 ## Setup
 
-The code is deployed on a virtual machine. Currently, an Ubuntu 22.02 image is used via [bwCloud SCOPE](https://www.bw-cloud.org/en/). See [First Steps](https://www.bw-cloud.org/en/first_steps) for setup instructions.
+The code is deployed on a virtual machine. Currently, an Ubuntu 24.04 image is used via [bwCloud 3](https://www.bw-cloud.org/en/). See [First Steps](https://wiki.bwcloud-os.de) for setup instructions. For fast and smooth operation, 8GB of RAM is recommended.
 
 After creating the virtual machine, all packages should first be updated.
 

@@ -24,22 +24,32 @@ function script()
 
     df_emergency = @chain df begin
         subset(:Variable => ByRow(isequal("EmergencyInteraction")))
+
+        groupby([:Participant, :Date])
         transform(
-            :DateTime => ByRow(Date) => :Date,
+            eachindex => :Index,
             :DateTime => ByRow(x -> Dates.format(Time(x), dateformat"HH:MM")) => :Time,
             :Value => :Counter
         )
-        select(:Participant, :Date, :Time, :Counter)
+
+        select(:Participant, :Date, :Index, :Time, :Counter)
     end
 
     df_conversation = @chain df begin
         subset(:Variable => ByRow(isequal("Conversation")))
-        transform(:Value => ByRow(x -> isequal(x, 1) ? "Yes" : "No") => :Conversation)
-        select(:Participant, :Date, :Conversation)
+        dropmissing(:Value)
+
+        groupby([:Participant, :Date])
+        transform(
+            eachindex => :Index,
+            :Value => ByRow(x -> x == 1 ? "Yes" : "No") => :Conversation
+        )
+        
+        select(:Participant, :Date, :Index, :Conversation)
     end
 
     df_jitai = @chain begin
-        leftjoin(df_emergency, df_conversation; on = [:Participant, :Date])
+        leftjoin(df_emergency, df_conversation; on = [:Participant, :Date, :Index])
 
         select(:Participant, :Date, :Time, :Counter, :Conversation)
         unique

@@ -228,3 +228,18 @@ function send_jitai_email(credentials, receivers, df)
 
     @info "Sent jitai email."
 end
+
+function send_startuop_email(credentials, receivers, df)
+    html = make_html(
+        "Start-Up Session",
+        [
+            make_title("Start-Up Session"),
+            make_paragraph(""),
+            make_table(df)
+        ]
+    )
+
+    send_email(credentials, receivers, "OPTIMIND Start-Up Session", html)
+
+    @info "Sent startup email."
+end

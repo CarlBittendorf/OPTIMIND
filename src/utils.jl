@@ -30,3 +30,5 @@ end
 parse_created_at(x) = DateTime(x[1:(end - 4)])
 
 enumerate_days(x) = Dates.value.(Date.(x) .- Date(minimum(x; init = Date(now())))) .+ 1
+
+fill_down(x) = accumulate((a, b) -> coalesce(b, a), x; init = missing)

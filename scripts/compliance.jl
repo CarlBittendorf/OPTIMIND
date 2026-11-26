@@ -11,51 +11,48 @@ function script()
     day = dayname(dayofweek(now()))
     cutoff = day == "Monday" ? Date(now() - Day(3)) : Date(now() - Day(2))
 
-    variables = getproperty.(COMPLIANCE_VARIABLES, :name)
-
     df = @chain begin
         download_interaction_designer_variable_values(
             token,
             STUDY_UUID,
             participantuuids,
             COMPLIANCE_VARIABLES;
-            cutofftime = floor(now(), Day),
-            hoursinpast = 36 * 24
+            cutofftime=floor(now(), Day),
+            hoursinpast=36 * 24
         )
+
+        unstack([:Participant, :DateTime], :Variable, :Value)
 
         transform(:DateTime => ByRow(Date) => :Date)
 
-        # use only participants who are still active
-        groupby(:Participant)
-        subset(:Date => (x -> maximum(x; init = cutoff) == Date(now()) - Day(1)))
-
-        # count the appearances of each variable
         groupby([:Participant, :Date])
-        combine((:Variable => (x -> count(isequal(name), x)) => name for name in variables)...)
+        combine(
+            :OverallDayCount => (x -> coalesce(x...)) => :Day,
+            [:CalibrationPhaseEMATriggered, :CalibrationPhaseEMAFinished] .=>
+                (x -> count(!ismissing, x)) .=> [:Triggered, :Finished]
+        )
+
+        subset(
+            :Date => ByRow(x -> x >= cutoff),
+            :Day => ByRow(x -> (x <= 3) || (7 < x <= 35))
+        )
 
         sort([:Participant, :Date])
 
-        groupby(:Participant)
-        transform(:Date => enumerate_days => :Day)
-
-        transform(
-            :Day => ByRow(x -> (x <= 3) ? 8 : (4 <= x <= 7) ? 0 : 4) => :Target,
-            Cols(endswith("Triggered")) => ByRow(+) => :Triggered,
-            Cols(endswith("Finished")) => ByRow(+) => :Finished
-        )
+        transform(:Day => ByRow(x -> (x <= 3) ? 8 : 4) => :Target)
 
         groupby(:Participant)
         combine(
-            [:Day, :Date] => ((days, dates) -> format_days(days[dates .>= cutoff])) => :Days,
+            :Day => format_days => :Days,
             [:Target, :Finished] => ((targets, finishes) -> sum(finishes) / sum(targets)) => :Total,
-            [:Target, :Date] => ((targets, dates) -> sum(targets[dates .>= cutoff])) => :Target,
-            [:Finished, :Date] => ((finishes, dates) -> sum(finishes[dates .>= cutoff])) => :Finished
+            [:Target, :Finished] .=> sum;
+            renamecols=false
         )
 
         transform([:Target, :Finished] => ByRow((targets, finishes) -> finishes / targets) => :Compliance)
         sort([:Compliance, :Total])
 
-        transform([:Compliance, :Total] .=> ByRow(format_compliance); renamecols = false)
+        transform([:Compliance, :Total] .=> ByRow(format_compliance); renamecols=false)
         select(:Participant, :Days, :Target, :Finished, :Compliance, :Total)
     end
 

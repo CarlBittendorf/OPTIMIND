@@ -42,7 +42,7 @@ To have the scripts run automatically at specific times, a corresponding entry m
 crontab -e
 ```
 
-The following lines run the jitai and compliance scripts.
+The following lines run the jitai, compliance and startup scripts.
 
 ```plain
 0 4 * * 0-6 bash -l -c 'cd /home/ubuntu/OPTIMIND && julia --project scripts/jitai.jl 12'
@@ -56,6 +56,7 @@ The following lines run the jitai and compliance scripts.
 30 6 * * 1 bash -l -c 'cd /home/ubuntu/OPTIMIND && julia --project scripts/compliance.jl'
 30 6 * * 3 bash -l -c 'cd /home/ubuntu/OPTIMIND && julia --project scripts/compliance.jl'
 30 6 * * 5 bash -l -c 'cd /home/ubuntu/OPTIMIND && julia --project scripts/compliance.jl'
+40 6 * * 0-6 bash -l -c 'cd /home/ubuntu/OPTIMIND && julia --project scripts/startup.jl'
 ```
 
 To update to the latest version, run
